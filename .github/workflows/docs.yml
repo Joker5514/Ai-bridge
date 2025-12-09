@@ -1,0 +1,57 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy-docs:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install sphinx sphinx-rtd-theme sphinx-autodoc-typehints myst-parser
+          pip install -r requirements.txt || true
+
+      - name: Create Docs Structure
+        run: |
+          mkdir -p docs/source docs/build
+          if [ ! -f docs/source/conf.py ]; then
+            sphinx-quickstart docs/source -q -p "Project" -a "Author" --ext-autodoc --ext-viewcode
+          fi
+
+      - name: Generate API Docs
+        run: |
+          sphinx-apidoc -o docs/source src/ -f || sphinx-apidoc -o docs/source . -f --ignore-module-all
+          sphinx-build -b html docs/source docs/build/html
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/build/html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

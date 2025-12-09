@@ -1,3 +1,4 @@
+# Labels based on changed file paths
 documentation:
   - changed-files:
     - any-glob-to-any-file:
@@ -10,24 +11,30 @@ tests:
     - any-glob-to-any-file:
       - 'tests/**'
       - '**/test_*.py'
+      - '**/*_test.py'
 
 ci/cd:
   - changed-files:
     - any-glob-to-any-file:
       - '.github/**'
       - 'Dockerfile*'
+      - 'docker-compose*'
 
 api:
   - changed-files:
     - any-glob-to-any-file:
       - 'src/api/**'
       - '**/routes/**'
+      - '**/endpoints/**'
 
 ai/ml:
   - changed-files:
     - any-glob-to-any-file:
       - '**/models/**'
+      - '**/training/**'
+      - '**/inference/**'
       - '**/*model*.py'
+      - '**/*neural*.py'
 
 config:
   - changed-files:
@@ -35,10 +42,13 @@ config:
       - '*.yaml'
       - '*.yml'
       - '*.toml'
+      - '*.ini'
+      - '.env*'
 
 dependencies:
   - changed-files:
     - any-glob-to-any-file:
       - 'requirements*.txt'
       - 'pyproject.toml'
+      - 'setup.py'
       - 'package.json'

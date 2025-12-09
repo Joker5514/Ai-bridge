@@ -1,0 +1,17 @@
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = [".git", ".venv", "__pycache__", "build", "dist", "node_modules"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4", "UP"]
+ignore = ["E501", "B008"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --tb=short"

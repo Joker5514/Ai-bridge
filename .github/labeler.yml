@@ -1,0 +1,44 @@
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**'
+      - '*.md'
+      - 'README*'
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'tests/**'
+      - '**/test_*.py'
+
+ci/cd:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**'
+      - 'Dockerfile*'
+
+api:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/api/**'
+      - '**/routes/**'
+
+ai/ml:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/models/**'
+      - '**/*model*.py'
+
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '*.yaml'
+      - '*.yml'
+      - '*.toml'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+      - 'package.json'

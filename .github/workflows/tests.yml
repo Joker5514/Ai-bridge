@@ -2,9 +2,9 @@ name: Run Tests
 
 on:
   push:
-    branches: [main, develop, master]
+    branches: [main, develop]
   pull_request:
-    branches: [main, develop, master]
+    branches: [main, develop]
 
 jobs:
   test:
@@ -32,9 +32,15 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt 2>/dev/null || true
+          pip install -r requirements.txt || pip install pytest pytest-cov
           pip install pytest pytest-cov
 
       - name: Run Tests
         run: |
-          pytest tests/ -v --tb=short 2>/dev/null || pytest . -v --ignore=node_modules 2>/dev/null || echo "No tests found"
+          pytest tests/ --cov=src --cov-report=xml -v || pytest . -v --ignore=node_modules
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false

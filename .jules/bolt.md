@@ -1,0 +1,3 @@
+## 2024-03-01 - Deriving state in render to prevent double-renders
+**Learning:** Found a specific React performance anti-pattern in the codebase: `useEffect` was being used to sync calculatable derived state (`playerScore` and `dealerScore` derived from hands) with `useState`. This causes a full re-render when the primary state (the hand array) updates, followed immediately by another full re-render when the `useEffect` triggers the secondary state update.
+**Action:** Always derive calculatable state during the render cycle instead of syncing it with `useEffect`. Use `useMemo` to prevent expensive recalculations if needed.

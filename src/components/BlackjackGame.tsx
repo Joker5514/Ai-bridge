@@ -9,10 +9,15 @@ const BlackjackGame: React.FC<{ setVitoMessage: (msg: VitoMessage) => void }> = 
   const [deck, setDeck] = useState<CardType[]>([]);
   const [playerHand, setPlayerHand] = useState<CardType[]>([]);
   const [dealerHand, setDealerHand] = useState<CardType[]>([]);
-  const [playerScore, setPlayerScore] = useState(0);
-  const [dealerScore, setDealerScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [message, setMessage] = useState('');
+
+  // Performance Optimization:
+  // Previously, playerScore and dealerScore were synced via a useEffect.
+  // This caused an unnecessary double-render cycle whenever playerHand or dealerHand changed.
+  // By deriving the score during render (and memoizing the calculation), we skip the extra render cycle.
+  const playerScore = React.useMemo(() => calculateScore(playerHand), [playerHand]);
+  const dealerScore = React.useMemo(() => calculateScore(dealerHand), [dealerHand]);
 
   const updateVitoMessage = useCallback(async (context: string, outcome: 'win' | 'loss' | 'neutral') => {
     const text = await getVitoMessage(context, outcome);
@@ -36,11 +41,6 @@ const BlackjackGame: React.FC<{ setVitoMessage: (msg: VitoMessage) => void }> = 
   useEffect(() => {
     deal();
   }, [deal]);
-
-  useEffect(() => {
-    setPlayerScore(calculateScore(playerHand));
-    setDealerScore(calculateScore(dealerHand));
-  }, [playerHand, dealerHand]);
 
   const handleHit = async () => {
     if (gameOver || deck.length === 0) return;
